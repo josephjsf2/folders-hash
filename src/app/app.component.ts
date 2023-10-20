@@ -2,8 +2,12 @@ import { Component } from '@angular/core';
 import { ElectronService } from './core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
+import { SharedModule } from './shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
+  standalone: true,
+  imports: [SharedModule, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

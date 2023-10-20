@@ -1,4 +1,4 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow, screen, ipcMain, dialog, desktopCapturer, nativeImage} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -22,6 +22,7 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,
     },
   });
+  win.webContents.openDevTools();
 
   if (serve) {
     const debug = require('electron-debug');
@@ -58,7 +59,25 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(createWindow, 400)
+
+    ipcMain.handle('open-folder-dialog', async (event, ...args) => {
+      const result = await dialog.showOpenDialog(win, { properties: ['openDirectory']});
+      result['index'] = args[0];
+      event.sender.send('open-folder-dialog-reply', result)
+    })
+
+    ipcMain.handle('capture-window', async (event, ...args) => {
+      const image = (await desktopCapturer.getSources({
+        types: ['window'],
+        thumbnailSize:{width: screen.getPrimaryDisplay().workAreaSize.width, height: screen.getPrimaryDisplay().workAreaSize.height}
+      }))[0].thumbnail.toDataURL();
+      const blob = nativeImage.createFromDataURL(image);
+      event.sender.send('capture-window-reply', blob)
+    })
+
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

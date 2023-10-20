@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true,
+    "strictNullChecks": false,
     "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
