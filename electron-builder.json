@@ -3,7 +3,7 @@
   "directories": {
     "output": "release/"
   },
-  "productName":"FoldersHash",
+  "productName":"Folders Hash",
   "files": [
     "**/*",
     "!**/*.ts",
