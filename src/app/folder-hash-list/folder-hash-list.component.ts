@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { ButtonModule } from 'primeng/button';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -52,6 +53,7 @@ export class FolderHashListComponent implements OnInit, OnDestroy{
       try{
         this.configs = JSON.parse(cfgs)
       }catch(err){
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         setTimeout(()=> this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error: Unable to parse config. ${err}` }))
       }
     }else{
@@ -86,6 +88,7 @@ export class FolderHashListComponent implements OnInit, OnDestroy{
             clipboard.writeImage(img);
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Screenshot has been copied to clipboard.' })
           }catch(e){
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             this.messageService.add({ severity: 'error', summary: 'Error', detail: `Unable to copy message ${e}` })
           }
         }
@@ -177,6 +180,7 @@ export class FolderHashListComponent implements OnInit, OnDestroy{
       config.fileCount = fileCount
       this.cdRef.detectChanges();
     }catch(err){
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error: Unable to calculate folder hash: ${config.path} ${err}` })
     }
   }
