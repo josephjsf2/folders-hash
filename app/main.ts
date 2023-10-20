@@ -22,11 +22,11 @@ function createWindow(): BrowserWindow {
       contextIsolation: false,
     },
   });
-  win.webContents.openDevTools();
 
   if (serve) {
     const debug = require('electron-debug');
     debug();
+    win.webContents.openDevTools();
 
     require('electron-reloader')(module);
     win.loadURL('http://localhost:4200');
@@ -63,7 +63,7 @@ try {
     setTimeout(createWindow, 400)
 
     ipcMain.handle('open-folder-dialog', async (event, ...args) => {
-      const result = await dialog.showOpenDialog(win, { properties: ['openDirectory']});
+      const result: any = await dialog.showOpenDialog(win, { properties: ['openDirectory']});
       result['index'] = args[0];
       event.sender.send('open-folder-dialog-reply', result)
     })

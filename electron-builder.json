@@ -3,6 +3,7 @@
   "directories": {
     "output": "release/"
   },
+  "productName":"FoldersHash",
   "files": [
     "**/*",
     "!**/*.ts",
@@ -21,7 +22,7 @@
     ]
   },
   "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
+    "splashImage": "dist/assets/icons/loading.jpeg"
   },
   "mac": {
     "icon": "dist/assets/icons",
