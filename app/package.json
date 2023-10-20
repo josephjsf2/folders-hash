@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
-  "description": "Angular Electron sample",
+  "name": "folders-hash",
+  "description": "",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Joseph-W",
+    "email": ""
   },
-  "version": "13.0.0",
+  "version": "1.0.0",
   "main": "main.js",
   "private": true,
   "dependencies": {

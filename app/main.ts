@@ -1,4 +1,4 @@
-import {app, BrowserWindow, screen, ipcMain, dialog, desktopCapturer, nativeImage} from 'electron';
+import {app, BrowserWindow, screen, ipcMain, dialog, desktopCapturer, nativeImage, webContents} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -16,12 +16,15 @@ function createWindow(): BrowserWindow {
     y: 0,
     width: size.width,
     height: size.height,
+    resizable: false,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
       contextIsolation: false,
     },
   });
+  win.removeMenu();
 
   if (serve) {
     const debug = require('electron-debug');
@@ -69,11 +72,28 @@ try {
     })
 
     ipcMain.handle('capture-window', async (event, ...args) => {
-      const image = (await desktopCapturer.getSources({
-        types: ['window'],
-        thumbnailSize:{width: screen.getPrimaryDisplay().workAreaSize.width, height: screen.getPrimaryDisplay().workAreaSize.height}
-      }))[0].thumbnail.toDataURL();
-      const blob = nativeImage.createFromDataURL(image);
+
+      const wcs = webContents.getAllWebContents();
+      const selfWindws = await Promise.all(
+        wcs
+          .filter((item) => {
+            const win = BrowserWindow.fromWebContents(item);
+            return win && win.isVisible();
+          })
+          .map(async (item) => {
+            const win = BrowserWindow.fromWebContents(item);
+            const thumbnailString = (await win.capturePage()).toDataURL();
+
+            return {
+              id: win.getMediaSourceId(),
+              name: win.getTitle(),
+              thumbnailString
+            };
+          }),
+      );
+
+      const thumbnailString: string = selfWindws[0].thumbnailString;
+      const blob = nativeImage.createFromDataURL(thumbnailString);
       event.sender.send('capture-window-reply', blob)
     })
 
